@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kisaan Sathi — AI Farm Advisor for India</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --green-deep:   #1a3a1a;
+    --green-mid:    #2e6b2e;
+    --green-bright: #4a9e4a;
+    --green-light:  #d4edd4;
+    --green-pale:   #f0f9f0;
+    --amber:        #e8a020;
+    --amber-light:  #fdf3e0;
+    --soil:         #7a4a1e;
+    --cream:        #faf8f3;
+    --ink:          #111;
+    --muted:        #555;
+    --border:       rgba(0,0,0,0.08);
+    --font-display: 'Playfair Display', Georgia, serif;
+    --font-body:    'Inter', system-ui, sans-serif;
+  }
+
+  html { scroll-behavior: smooth; }
+  body { font-family: var(--font-body); background: var(--cream); color: var(--ink); line-height: 1.7; }
+  img { max-width: 100%; display: block; }
+
+  /* ── NAV ── */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(250,248,243,0.95); backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 2rem;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 64px;
+  }
+  .nav-brand {
+    font-family: var(--font-display); font-size: 1.3rem; color: var(--green-deep);
+    text-decoration: none; display: flex; align-items: center; gap: 8px;
+  }
+  .nav-brand .leaf { font-size: 1.4rem; }
+  .nav-links { display: flex; gap: 2rem; list-style: none; }
+  .nav-links a { text-decoration: none; color: var(--muted); font-size: 0.9rem; transition: color 0.2s; }
+  .nav-links a:hover { color: var(--green-mid); }
+  .nav-cta {
+    background: var(--green-mid); color: #fff; border: none;
+    padding: 9px 20px; border-radius: 8px; font-size: 0.9rem;
+    cursor: pointer; font-family: var(--font-body); transition: background 0.2s;
+    text-decoration: none;
+  }
+  .nav-cta:hover { background: var(--green-deep); }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 92vh;
+    display: grid; grid-template-columns: 1fr 1fr; align-items: center;
+    gap: 4rem; padding: 5rem 2rem 5rem 4rem; max-width: 1200px; margin: 0 auto;
+  }
+  .hero-eyebrow {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--green-light); color: var(--green-deep);
+    padding: 5px 14px; border-radius: 20px; font-size: 0.8rem; font-weight: 500;
+    margin-bottom: 1.5rem;
+  }
+  .hero h1 {
+    font-family: var(--font-display); font-size: clamp(2.5rem, 5vw, 4rem);
+    line-height: 1.15; color: var(--green-deep); margin-bottom: 1.2rem;
+  }
+  .hero h1 em { font-style: normal; color: var(--green-bright); }
+  .hero-sub { font-size: 1.1rem; color: var(--muted); margin-bottom: 2rem; max-width: 480px; }
+  .hero-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+  .btn-primary {
+    background: var(--green-mid); color: #fff; border: none;
+    padding: 13px 28px; border-radius: 10px; font-size: 1rem; font-weight: 500;
+    cursor: pointer; font-family: var(--font-body); transition: all 0.2s;
+    text-decoration: none; display: inline-block;
+  }
+  .btn-primary:hover { background: var(--green-deep); transform: translateY(-1px); }
+  .btn-secondary {
+    background: transparent; color: var(--green-mid);
+    border: 1.5px solid var(--green-mid);
+    padding: 13px 28px; border-radius: 10px; font-size: 1rem; font-weight: 500;
+    cursor: pointer; font-family: var(--font-body); transition: all 0.2s;
+    text-decoration: none; display: inline-block;
+  }
+  .btn-secondary:hover { background: var(--green-pale); }
+
+  /* phone mockup */
+  .hero-visual { position: relative; display: flex; justify-content: center; }
+  .phone-frame {
+    width: 300px; background: #111; border-radius: 36px;
+    padding: 14px 10px; box-shadow: 0 40px 80px rgba(0,0,0,0.18);
+    position: relative;
+  }
+  .phone-notch { width: 80px; height: 26px; background: #111; border-radius: 13px; margin: 0 auto 8px; position: relative; z-index: 2; }
+  .phone-screen { background: #fff; border-radius: 24px; overflow: hidden; min-height: 520px; }
+  .wa-header { background: #075e54; padding: 14px 16px; display: flex; align-items: center; gap: 10px; }
+  .wa-avatar { width: 38px; height: 38px; background: var(--green-light); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; }
+  .wa-title { color: #fff; }
+  .wa-title strong { display: block; font-size: 14px; font-weight: 600; }
+  .wa-title span { font-size: 11px; opacity: 0.8; }
+  .wa-body { background: #ece5dd; padding: 12px; min-height: 460px; }
+  .wa-bubble-wrap { margin-bottom: 10px; }
+  .wa-bubble {
+    border-radius: 8px; padding: 8px 12px; font-size: 12.5px; line-height: 1.55;
+    max-width: 88%; display: inline-block; position: relative;
+  }
+  .wa-bubble.farmer { background: #dcf8c6; margin-left: auto; display: block; text-align: left; border-radius: 8px 0 8px 8px; }
+  .wa-bubble.ai { background: #fff; border-radius: 0 8px 8px 8px; }
+  .wa-time { font-size: 10px; color: #888; margin-top: 3px; text-align: right; }
+  .wa-alert { background: #fff8e1; border-left: 3px solid #e8a020; padding: 8px 10px; border-radius: 4px; font-size: 11px; margin-top: 10px; }
+
+  .hero-stats {
+    display: flex; gap: 2rem; margin-top: 2.5rem; padding-top: 2rem;
+    border-top: 1px solid var(--border);
+  }
+  .stat-item strong { display: block; font-size: 1.6rem; font-weight: 600; color: var(--green-mid); }
+  .stat-item span { font-size: 0.82rem; color: var(--muted); }
+
+  /* ── SECTION SHARED ── */
+  section { padding: 6rem 2rem; }
+  .section-inner { max-width: 1100px; margin: 0 auto; }
+  .section-tag { font-size: 0.78rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--green-bright); margin-bottom: 12px; }
+  .section-title { font-family: var(--font-display); font-size: clamp(1.8rem, 3vw, 2.6rem); color: var(--green-deep); margin-bottom: 1rem; line-height: 1.25; }
+  .section-sub { font-size: 1.05rem; color: var(--muted); max-width: 560px; }
+
+  /* ── PROBLEM ── */
+  .problem { background: var(--green-deep); color: #fff; }
+  .problem .section-title { color: #fff; }
+  .problem .section-sub { color: rgba(255,255,255,0.65); max-width: 100%; }
+  .problem-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 2rem; margin-top: 3rem; }
+  .problem-card { border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 1.5rem; }
+  .problem-num { font-size: 2.5rem; font-weight: 600; color: var(--amber); margin-bottom: 8px; }
+  .problem-label { font-size: 0.9rem; color: rgba(255,255,255,0.7); line-height: 1.5; }
+
+  /* ── FEATURES ── */
+  .features-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 1.5rem; margin-top: 3rem; }
+  .feature-card {
+    background: #fff; border: 1px solid var(--border);
+    border-radius: 14px; padding: 1.75rem;
+    transition: box-shadow 0.2s, transform 0.2s;
+  }
+  .feature-card:hover { box-shadow: 0 8px 30px rgba(0,0,0,0.07); transform: translateY(-2px); }
+  .feature-icon {
+    width: 48px; height: 48px; background: var(--green-light);
+    border-radius: 12px; display: flex; align-items: center; justify-content: center;
+    font-size: 22px; margin-bottom: 1rem;
+  }
+  .feature-card h3 { font-size: 1rem; font-weight: 600; color: var(--green-deep); margin-bottom: 6px; }
+  .feature-card p { font-size: 0.9rem; color: var(--muted); line-height: 1.6; }
+
+  /* ── HOW IT WORKS ── */
+  .how { background: var(--green-pale); }
+  .steps { display: flex; flex-direction: column; gap: 0; margin-top: 3rem; max-width: 680px; }
+  .step { display: grid; grid-template-columns: 48px 1fr; gap: 1.2rem; padding-bottom: 2.5rem; position: relative; }
+  .step:not(:last-child)::after {
+    content: ''; position: absolute; left: 23px; top: 48px; bottom: 0;
+    width: 2px; background: var(--green-light);
+  }
+  .step-circle {
+    width: 48px; height: 48px; border-radius: 50%;
+    background: var(--green-mid); color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 1.1rem; flex-shrink: 0; z-index: 1;
+  }
+  .step-body h3 { font-size: 1rem; font-weight: 600; color: var(--green-deep); margin-bottom: 6px; padding-top: 10px; }
+  .step-body p { font-size: 0.9rem; color: var(--muted); }
+
+  /* ── LANGUAGES ── */
+  .lang-grid { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 2rem; }
+  .lang-pill {
+    background: #fff; border: 1px solid var(--border);
+    padding: 7px 16px; border-radius: 20px; font-size: 0.88rem;
+    color: var(--green-deep); font-weight: 500;
+  }
+  .lang-pill.highlight { background: var(--green-light); border-color: var(--green-bright); }
+
+  /* ── DEMO ── */
+  .demo-wrap {
+    background: #fff; border: 1px solid var(--border);
+    border-radius: 16px; overflow: hidden; margin-top: 3rem;
+  }
+  .demo-tabs { display: flex; border-bottom: 1px solid var(--border); }
+  .demo-tab {
+    padding: 14px 24px; font-size: 0.9rem; cursor: pointer;
+    border: none; background: none; color: var(--muted); font-family: var(--font-body);
+    border-bottom: 2px solid transparent; transition: all 0.2s;
+  }
+  .demo-tab.active { color: var(--green-mid); border-bottom-color: var(--green-mid); background: var(--green-pale); }
+  .demo-content { padding: 2rem; display: none; }
+  .demo-content.active { display: block; }
+  .demo-scenario { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: start; }
+  .scenario-desc h3 { font-size: 1rem; font-weight: 600; color: var(--green-deep); margin-bottom: 8px; }
+  .scenario-desc p { font-size: 0.9rem; color: var(--muted); margin-bottom: 1rem; }
+  .scenario-badge { display: inline-block; background: var(--amber-light); color: var(--soil); padding: 4px 10px; border-radius: 6px; font-size: 0.78rem; font-weight: 500; margin-bottom: 1rem; }
+  .mini-chat { background: #ece5dd; border-radius: 12px; padding: 14px; }
+  .mini-msg { margin-bottom: 10px; }
+  .mini-bubble { border-radius: 8px; padding: 8px 12px; font-size: 12px; line-height: 1.55; max-width: 85%; display: inline-block; }
+  .mini-bubble.u { background: #dcf8c6; margin-left: auto; display: block; }
+  .mini-bubble.a { background: #fff; }
+  .mini-sender { font-size: 10px; color: #888; margin-bottom: 2px; }
+
+  /* ── IMPACT ── */
+  .impact { background: var(--amber-light); }
+  .impact-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 1.5rem; margin-top: 3rem; }
+  .impact-card { text-align: center; background: #fff; border-radius: 12px; padding: 1.5rem 1rem; border: 1px solid rgba(232,160,32,0.2); }
+  .impact-num { font-size: 2rem; font-weight: 700; color: var(--amber); margin-bottom: 4px; font-family: var(--font-display); }
+  .impact-label { font-size: 0.82rem; color: var(--muted); line-height: 1.4; }
+
+  /* ── CTA ── */
+  .cta-section {
+    background: var(--green-deep); text-align: center; padding: 6rem 2rem;
+  }
+  .cta-section h2 { font-family: var(--font-display); font-size: clamp(2rem,4vw,3rem); color: #fff; margin-bottom: 1rem; }
+  .cta-section p { color: rgba(255,255,255,0.65); font-size: 1.05rem; margin-bottom: 2rem; }
+  .wa-number { display: inline-flex; align-items: center; gap: 10px; background: #25d366; color: #fff; padding: 14px 32px; border-radius: 50px; font-size: 1.1rem; font-weight: 600; cursor: pointer; text-decoration: none; transition: opacity 0.2s; }
+  .wa-number:hover { opacity: 0.9; }
+  .wa-icon { font-size: 1.4rem; }
+
+  /* ── FOOTER ── */
+  footer {
+    background: #0d1f0d; color: rgba(255,255,255,0.5);
+    padding: 2rem; text-align: center; font-size: 0.85rem;
+  }
+  footer a { color: var(--green-light); text-decoration: none; }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp { from { opacity:0; transform:translateY(24px); } to { opacity:1; transform:translateY(0); } }
+  .fade-up { animation: fadeUp 0.7s ease both; }
+  .fade-up-2 { animation: fadeUp 0.7s 0.15s ease both; }
+  .fade-up-3 { animation: fadeUp 0.7s 0.3s ease both; }
+
+  @keyframes pulse-dot { 0%,100%{opacity:1} 50%{opacity:0.3} }
+  .online-dot { display: inline-block; width: 8px; height: 8px; background: #25d366; border-radius: 50%; margin-right: 5px; animation: pulse-dot 1.5s infinite; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 768px) {
+    .hero { grid-template-columns: 1fr; padding: 3rem 1.5rem; min-height: auto; gap: 3rem; }
+    .hero-visual { display: none; }
+    .problem-grid { grid-template-columns: 1fr; }
+    .features-grid { grid-template-columns: 1fr; }
+    .impact-grid { grid-template-columns: repeat(2,1fr); }
+    .demo-scenario { grid-template-columns: 1fr; }
+    .nav-links { display: none; }
+    .hero-stats { flex-wrap: wrap; gap: 1rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-brand" href="#">
+    <span class="leaf">🌱</span> Kisaan Sathi
+  </a>
+  <ul class="nav-links">
+    <li><a href="#features">Features</a></li>
+    <li><a href="#how">How it works</a></li>
+    <li><a href="#demo">Demo</a></li>
+    <li><a href="#impact">Impact</a></li>
+  </ul>
+  <a class="nav-cta" href="#cta">Start on WhatsApp</a>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-text">
+    <div class="hero-eyebrow fade-up">
+      <span class="online-dot"></span> Live in 12 Indian languages
+    </div>
+    <h1 class="fade-up-2">Your <em>smartest</em> farm advisor — on WhatsApp</h1>
+    <p class="hero-sub fade-up-3">Ask in Bhojpuri. Send a photo of a sick leaf. Get an expert answer in under 10 seconds. No app. No internet plan. No literacy barrier.</p>
+    <div class="hero-actions fade-up-3">
+      <a class="btn-primary" href="#cta">💬 Start on WhatsApp</a>
+      <a class="btn-secondary" href="#demo">See a demo</a>
+    </div>
+    <div class="hero-stats fade-up-3">
+      <div class="stat-item"><strong>100M+</strong><span>farmers in India</span></div>
+      <div class="stat-item"><strong>12</strong><span>languages</span></div>
+      <div class="stat-item"><strong>₹0</strong><span>cost to farmer</span></div>
+    </div>
+  </div>
+
+  <!-- Phone mockup -->
+  <div class="hero-visual">
+    <div class="phone-frame">
+      <div class="phone-notch"></div>
+      <div class="phone-screen">
+        <div class="wa-header">
+          <div class="wa-avatar">🌿</div>
+          <div class="wa-title">
+            <strong>Kisaan Sathi</strong>
+            <span><span class="online-dot"></span>online</span>
+          </div>
+        </div>
+        <div class="wa-body">
+          <div class="wa-bubble-wrap">
+            <div class="wa-bubble farmer">हमार धान के पत्ती पर भूरा धब्बा आ गया है 📷</div>
+            <div class="wa-time">9:14 AM ✓✓</div>
+          </div>
+          <div class="wa-bubble-wrap">
+            <div class="wa-bubble ai">
+              यह <strong>Brown Leaf Spot</strong> है 🍃<br><br>
+              ✅ Mancozeb 75% WP — 2g/लीटर<br>
+              ✅ खेत सूखा रखें<br>
+              ✅ 10 दिन बाद दोहराएं<br><br>
+              फोटो भेजें — और पक्का पहचान!
+            </div>
+            <div class="wa-time">9:14 AM</div>
+          </div>
+          <div class="wa-alert">
+            🌾 <strong>Mandi alert:</strong> Patna — धान ₹2,180/क्विंटल (MSP से 3% ऊपर)
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PROBLEM -->
+<section class="problem" id="problem">
+  <div class="section-inner">
+    <p class="section-tag">The real situation</p>
+    <h2 class="section-title">India's farmers deserve an expert — not a guess</h2>
+    <p class="section-sub">A farmer who spots disease at 7am has nobody to call. They guess, or ask the dealer who has products to sell. Bad advice costs money — sometimes the whole season.</p>
+    <div class="problem-grid">
+      <div class="problem-card">
+        <div class="problem-num">1:1000</div>
+        <div class="problem-label">Agriculture extension officers to farmers. One expert cannot serve a thousand farms.</div>
+      </div>
+      <div class="problem-card">
+        <div class="problem-num">₹6,000 Cr</div>
+        <div class="problem-label">Lost annually to misdiagnosed crop diseases — wrong pesticide, wrong dose, wrong time.</div>
+      </div>
+      <div class="problem-card">
+        <div class="problem-num">70%</div>
+        <div class="problem-label">Of eligible farmers don't access government schemes — because they don't know they qualify.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section id="features">
+  <div class="section-inner">
+    <p class="section-tag">What Kisaan Sathi does</p>
+    <h2 class="section-title">Everything a farm advisor would tell you — instantly</h2>
+    <p class="section-sub">Built for how farmers actually communicate. No new app to learn. No internet plan needed beyond basic WhatsApp.</p>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">🎙️</div>
+        <h3>Voice-first, dialect-aware</h3>
+        <p>Send a voice note in Bhojpuri, Maithili, or any regional dialect. Kisaan Sathi understands what you say — even on a ₹800 phone.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📷</div>
+        <h3>Photo crop diagnosis</h3>
+        <p>Snap a photo of a sick leaf, pest, or soil patch. AI trained on Indian crop varieties identifies the disease and recommends treatment in plain language.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🌤️</div>
+        <h3>Hyperlocal weather & mandi prices</h3>
+        <p>Get rainfall forecasts for your block and mandi prices for your district — not a generic state average. Your farm, your market.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📜</div>
+        <h3>Government scheme navigator</h3>
+        <p>Tell Kisaan Sathi your land size and crop. It tells you exactly which PM-Kisan, PMFBY, or state schemes you qualify for, and guides you through applying.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">💊</div>
+        <h3>Fertiliser & pesticide guide</h3>
+        <p>Get precise dosage, timing, and mixing instructions for inputs — in your language. No more guessing from Hindi-only labels.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">👨‍🌾</div>
+        <h3>Escalate to a human</h3>
+        <p>Complex legal or credit questions get routed to a live Krishi Mitra agent. AI handles 90%, humans handle the 10% that matter most.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how" id="how">
+  <div class="section-inner">
+    <p class="section-tag">How it works</p>
+    <h2 class="section-title">Zero friction. Four steps.</h2>
+    <p class="section-sub">Designed so that a first-time smartphone user in a Bihar village can use it without help.</p>
+    <div class="steps">
+      <div class="step">
+        <div class="step-circle">1</div>
+        <div class="step-body">
+          <h3>Save the number</h3>
+          <p>One WhatsApp contact. No app download, no registration, no OTP. Works on any phone with WhatsApp installed.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-circle">2</div>
+        <div class="step-body">
+          <h3>Ask in any format</h3>
+          <p>Voice note in your dialect, a blurry photo of a leaf, or a typed question in Hindi or English. All accepted, all understood.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-circle">3</div>
+        <div class="step-body">
+          <h3>Get an expert answer in under 10 seconds</h3>
+          <p>Speech-to-text, language detection, crop disease model, scheme database, and mandi price API — all combined into one clear response.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-circle">4</div>
+        <div class="step-body">
+          <h3>Act with confidence</h3>
+          <p>The right pesticide, the right dose, the right time to sell. Proactive alerts reach you before rain, before price drops, before deadlines.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LANGUAGES -->
+<section id="languages">
+  <div class="section-inner">
+    <p class="section-tag">Languages</p>
+    <h2 class="section-title">India speaks many languages. So does Kisaan Sathi.</h2>
+    <p class="section-sub">Available at launch — more dialects added every month based on farmer demand.</p>
+    <div class="lang-grid">
+      <div class="lang-pill highlight">Hindi</div>
+      <div class="lang-pill highlight">Bhojpuri</div>
+      <div class="lang-pill highlight">Maithili</div>
+      <div class="lang-pill">Bengali</div>
+      <div class="lang-pill">Marathi</div>
+      <div class="lang-pill">Punjabi</div>
+      <div class="lang-pill">Telugu</div>
+      <div class="lang-pill">Tamil</div>
+      <div class="lang-pill">Kannada</div>
+      <div class="lang-pill">Odia</div>
+      <div class="lang-pill">Gujarati</div>
+      <div class="lang-pill">English</div>
+    </div>
+  </div>
+</section>
+
+<!-- DEMO -->
+<section id="demo" style="background: var(--green-pale);">
+  <div class="section-inner">
+    <p class="section-tag">Real conversations</p>
+    <h2 class="section-title">See Kisaan Sathi in action</h2>
+    <div class="demo-wrap">
+      <div class="demo-tabs">
+        <button class="demo-tab active" onclick="showTab('disease')">Crop disease</button>
+        <button class="demo-tab" onclick="showTab('mandi')">Mandi price</button>
+        <button class="demo-tab" onclick="showTab('scheme')">Govt scheme</button>
+      </div>
+
+      <div class="demo-content active" id="tab-disease">
+        <div class="demo-scenario">
+          <div class="scenario-desc">
+            <div class="scenario-badge">📍 Nalanda, Bihar · Kharif 2025</div>
+            <h3>Ramesh spots yellow leaves on his paddy crop</h3>
+            <p>He sends a voice note in Bhojpuri at 6:30am. Within seconds, Kisaan Sathi identifies Bacterial Leaf Blight and gives him a precise, affordable treatment plan — including where to buy it in his block.</p>
+            <p style="margin-top:0.5rem; font-size:0.85rem; color:var(--green-mid); font-weight:500;">Result: Saved 80% of the crop. Avoided ₹4,200 in losses.</p>
+          </div>
+          <div class="mini-chat">
+            <div class="mini-msg"><div class="mini-sender">Ramesh 🎙 Bhojpuri</div><div class="mini-bubble u">हमार धान पीला पड़ रहा है, पानी से भरा खेत है...</div></div>
+            <div class="mini-msg"><div class="mini-bubble a">यह <strong>Bacterial Leaf Blight</strong> के लक्षण हैं।<br><br>✅ खेत से पानी निकालें आज ही<br>✅ Streptocycline 150ppm + Copper Oxychloride 0.3% — 10 दिन में 2 बार<br><br>आपके नजदीकी दुकान: <strong>बिहारशरीफ बाजार, मुख्य सड़क</strong> पर मिलेगा।</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="demo-content" id="tab-mandi">
+        <div class="demo-scenario">
+          <div class="scenario-desc">
+            <div class="scenario-badge">📍 Patna, Bihar · October 2025</div>
+            <h3>Sunita wants to know when to sell her paddy</h3>
+            <p>She asks Kisaan Sathi for today's Patna mandi rate and whether she should sell now or wait. The AI pulls real-time Agmarknet data and gives a recommendation.</p>
+            <p style="margin-top:0.5rem; font-size:0.85rem; color:var(--green-mid); font-weight:500;">Result: Waited 3 days. Got ₹180 extra per quintal.</p>
+          </div>
+          <div class="mini-chat">
+            <div class="mini-msg"><div class="mini-sender">Sunita</div><div class="mini-bubble u">आज पटना मंडी में धान का भाव क्या है? बेचूं या रुकूं?</div></div>
+            <div class="mini-msg"><div class="mini-bubble a">आज पटना मंडी: <strong>₹2,180/क्विंटल</strong> (MSP ₹2,115 से 3% ऊपर ✅)<br><br>🔮 अगले 3 दिन में और बढ़ने की संभावना है — मानसून वापसी से आवक कम होगी।<br><br>सुझाव: <strong>2-3 दिन रोकें</strong> तो ₹2,300+ मिल सकता है।</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="demo-content" id="tab-scheme">
+        <div class="demo-scenario">
+          <div class="scenario-desc">
+            <div class="scenario-badge">📍 Muzaffarpur, Bihar · January 2025</div>
+            <h3>Mohan doesn't know he qualifies for crop insurance</h3>
+            <p>He had a bad rabi season but never heard of PMFBY. He asks Kisaan Sathi if there's any government help. It identifies his eligibility and walks him through the application — step by step.</p>
+            <p style="margin-top:0.5rem; font-size:0.85rem; color:var(--green-mid); font-weight:500;">Result: Received ₹18,000 insurance payout he never knew he could get.</p>
+          </div>
+          <div class="mini-chat">
+            <div class="mini-msg"><div class="mini-sender">Mohan</div><div class="mini-bubble u">इस साल फसल बर्बाद हो गई, कोई सरकारी मदद मिल सकती है क्या?</div></div>
+            <div class="mini-msg"><div class="mini-bubble a">हाँ! आप <strong>PMFBY (फसल बीमा)</strong> के लिए eligible हैं।<br><br>📋 जरूरी दस्तावेज़:<br>• आधार कार्ड<br>• खसरा / जमीन कागज़<br>• बैंक पासबुक<br><br>नजदीकी CSC सेंटर पर जाएं — मैं पता बताऊं?</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- IMPACT -->
+<section class="impact" id="impact">
+  <div class="section-inner">
+    <p class="section-tag" style="color:var(--soil);">Projected impact</p>
+    <h2 class="section-title">What this changes for India's farmers</h2>
+    <div class="impact-grid">
+      <div class="impact-card">
+        <div class="impact-num">30%</div>
+        <div class="impact-label">Reduction in crop loss from misdiagnosed disease</div>
+      </div>
+      <div class="impact-card">
+        <div class="impact-num">₹8,000</div>
+        <div class="impact-label">Average annual income increase per farmer</div>
+      </div>
+      <div class="impact-card">
+        <div class="impact-num">3×</div>
+        <div class="impact-label">More farmers accessing government schemes they qualify for</div>
+      </div>
+      <div class="impact-card">
+        <div class="impact-num">10 sec</div>
+        <div class="impact-label">Average response time vs. 2–3 days for an extension officer</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section" id="cta">
+  <div class="section-inner" style="max-width:600px;">
+    <h2>Start right now — just send a message</h2>
+    <p>Save the number. Ask your first question. Get an answer in your language within seconds.</p>
+    <a class="wa-number" href="https://wa.me/911234567890" target="_blank">
+      <span class="wa-icon">💬</span> Chat on WhatsApp
+    </a>
+    <p style="color:rgba(255,255,255,0.4); font-size:0.8rem; margin-top:1.5rem;">Free for farmers. Supported by agri-input partners and state government partnerships.</p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>© 2025 Kisaan Sathi · Built for India's farmers &nbsp;·&nbsp; <a href="#">Privacy</a> &nbsp;·&nbsp; <a href="#">Contact</a></p>
+  <p style="margin-top:8px; font-size:0.75rem;">This is a concept project built for the "Improve Everyday Life with AI" challenge.</p>
+</footer>
+
+<script>
+  function showTab(name) {
+    document.querySelectorAll('.demo-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.demo-content').forEach(c => c.classList.remove('active'));
+    document.getElementById('tab-' + name).classList.add('active');
+    event.target.classList.add('active');
+  }
+
+  // Intersection observer for subtle scroll animations
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.style.opacity = '1';
+        e.target.style.transform = 'translateY(0)';
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.feature-card, .problem-card, .impact-card, .step').forEach(el => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(20px)';
+    el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+    observer.observe(el);
+  });
+</script>
+</body>
+</html>
