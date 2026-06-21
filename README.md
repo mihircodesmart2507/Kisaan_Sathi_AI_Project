@@ -1,9 +1,11 @@
 # Kisaan_Sathi_AI_Presentation
 An intelligent, WhatsApp-based agricultural advisory system designed for Indian farmers. It provides instant, dialect-aware support in 12 languages, including features like AI-driven crop disease diagnosis, hyperlocal weather forecasts, mandi price tracking, and government scheme navigation, all without requiring a dedicated mobile app.
 
-Kisaan Sathi — AI Farm Advisor for IndiaKisaan Sathi is an intelligent, WhatsApp-based agricultural advisory system designed to bridge the information gap for India's farmers. It provides instant, dialect-aware support in 12 languages, ensuring that expert agricultural advice is accessible to everyone, regardless of internet speed or technical literacy.  
+Kisaan Sathi — AI Farm Advisor for IndiaKisaan Sathi is an intelligent, WhatsApp-based agricultural advisory system designed to bridge the information gap for India's farmers. It provides instant, dialect-aware support in 12 languages, ensuring that expert agricultural advice is accessible to everyone, regardless of internet speed or technical literacy.   
 
-Key FeaturesVoice- 
+# OverView: It is Uploaded and the required files is also uploaded. 
+
+# Key FeaturesVoice- 
 
 1) First, Dialect-aware Interaction: Supports interaction in 12 Indian languages, including regional dialects like Bhojpuri and Maithili.
 
